@@ -296,11 +296,11 @@
                 const newParty = {
                     id: `p${Date.now()}`,
                     name: '',
-                    parentName: '',
                     relationship: 'S/o',
                     relatedPersonName: '',
                     address: '',
-                    authSignatory: ''
+                    idProofType: 'Aadhaar Card',
+                    idProofNumber: ''
                 };
                 setParties([...parties, newParty]);
             };
@@ -359,6 +359,31 @@
                                     rows={2}
                                     placeholder="Mailing Address"
                                 ></textarea>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-500">ID Proof Type</label>
+                                        <select
+                                            value={party.idProofType || 'Aadhaar Card'}
+                                            onChange={(e) => handlePartyChange(index, 'idProofType', e.target.value)}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        >
+                                            <option>Aadhaar Card</option>
+                                            <option>PAN Card</option>
+                                            <option>Passport</option>
+                                            <option>Driving License</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-500">ID Proof Number</label>
+                                        <input
+                                            type="text"
+                                            value={party.idProofNumber}
+                                            onChange={(e) => handlePartyChange(index, 'idProofNumber', e.target.value)}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                            placeholder="ID Number"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -471,7 +496,7 @@
 
         // --- Main Components ---
         const ResidentialAgreementProfessional = () => {
-            const defaultPartyState = { id: 'l1', name: '', relationship: 'S/o', relatedPersonName: '', address: '' };
+            const defaultPartyState = { id: 'l1', name: '', relationship: 'S/o', relatedPersonName: '', address: '', idProofType: 'Aadhaar Card', idProofNumber: '' };
             const [agreementDate, setAgreementDate] = useState(new Date().toISOString().split('T')[0]);
             const [agreementCity, setAgreementCity] = useState('New Delhi');
             const [landlords, setLandlords] = useState([{ ...defaultPartyState, id: 'l1' }]);
@@ -529,7 +554,7 @@
                 const month = getMonthName(agreementDate);
                 const year = getYear(agreementDate);
 
-                const renderPartyList = (parties, type) => parties.map(p => `<b>${p.name || `[${type.toUpperCase()} NAME]`}</b> ${p.relationship || 'S/o'} ${p.relatedPersonName || '[Parent Name]'}, R/o ${p.address || `[${type.toUpperCase()} Address]`}`).join(', ');
+                const renderPartyList = (parties, type) => parties.map(p => `<b>${p.name || `[${type.toUpperCase()} NAME]`}</b> ${p.relationship || 'S/o'} ${p.relatedPersonName || '[Parent Name]'}, R/o ${p.address || `[${type.toUpperCase()} Address]`}, holding ${p.idProofType || 'Aadhaar Card'} No. <b>${p.idProofNumber || '[ID Number]'}</b>`).join(', ');
 
                 let clauseCounter = 0;
                 const clauses = [];
